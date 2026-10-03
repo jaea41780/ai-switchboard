@@ -4,7 +4,7 @@
 
 An early experiment for calling multiple AI providers, combining structured results, and turning a conclusion into a reviewable action plan.
 
-> **Project status:** early prototype. The website is an interactive simulation. Its model selectors (GPT-6 Astra/Sol/Luna, Claude, and internal models) do not call those models. The backend currently has an OpenAI adapter and a local fake provider; Claude and other providers need adapters and credentials before they can be used.
+> **Project status:** early prototype. The website is an interactive simulation. Its model selectors (GPT-6 Astra/Sol/Luna, Claude, and internal models) do not call those models. The backend supports OpenAI API, local Ollama, and a deterministic fake provider. A local open model can run without per-request API charges, but it is not GPT-6 Astra and its quality and speed depend on your hardware.
 
 ## Demo
 
@@ -26,11 +26,12 @@ Computer control is disabled by default. The current macOS controller only suppo
 
 ## Quick start
 
-Requirements: Python 3.11+ and Docker Desktop.
+Requirements: Python 3.11+, Docker Desktop, and Ollama running on your Mac. This free local setup uses the Qwen 3.5 9B model (about 6.6 GB to download), which fits the 16 GB Mac mini configuration used for development. It will not match GPT-6 Astra on every task.
 
     cd backend
     cp .env.example .env
-    # Add your own OpenAI API key to OPENAI_API_KEY in .env to use OpenAI.
+    # Install Ollama from https://ollama.com/download, then download the local model:
+    ollama pull qwen3.5:9b
     docker compose up --build
 
 The API documentation is at http://localhost:8000/docs.
@@ -45,7 +46,7 @@ Multi-provider analysis:
 
     curl -X POST http://localhost:8000/api/v1/analyze/multi -H 'Content-Type: application/json' -d '{"text":"The service repeatedly reports a database connection timeout."}'
 
-The multi-provider response includes each provider's result, any provider-specific error, and a consensus result. Configure OPENAI_API_KEY to enable the OpenAI adapter; otherwise the local fake provider is used.
+The multi-analysis endpoint returns results from the selected provider and a consensus result. By default, it uses Ollama on your Mac at `http://host.docker.internal:11434`; no API key is needed. To use OpenAI instead, set `AI_PROVIDER=openai` and configure `OPENAI_API_KEY` in `.env` (API usage is billed separately).
 
 ## Computer action flow
 
