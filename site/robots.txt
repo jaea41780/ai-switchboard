@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jaea41780.github.io/ai-switchboard/sitemap.xml
