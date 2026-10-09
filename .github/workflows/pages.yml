@@ -1,4 +1,4 @@
-name: Deploy demo to GitHub Pages
+name: Publish A³ Studio landing page to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -23,6 +23,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4
